@@ -1,22 +1,40 @@
+---
+import Header from "../components/Header.astro";
+const {title}: { title?: string } = Astro.props as {
+    title?: string
+};
+import fetchApi from '../lib/strapi';
+import type HeaderType from "../interfaces/Header";
+import type Photographer from "../interfaces/Photographer";
+const {photographer, header}: { photographer: Photographer, header: HeaderType } = Astro.props as {
+    photographer: Photographer,
+    header: HeaderType
+}
+const pageTitle = title ? `${title} - ${photographer.Name} ${photographer.Surname}` : `${photographer.Name} ${photographer.Surname}`;
+---
+
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+    <meta name="generator" content={Astro.generator}/>
+    <link rel="stylesheet" href="/src/styles/global.css"/>
+    <link rel="stylesheet" href="https://use.typekit.net/nsb5rjc.css">
+    <title>{pageTitle}</title>
+</head>
+<body class="font-sans">
+<Header links={header.Links} photographer={photographer}/>
+<slot/>
+</body>
 </html>
 
 <style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+    html,
+    body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+    }
 </style>

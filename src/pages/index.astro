@@ -1,11 +1,18 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import fetchApi from "../lib/strapi";
+import type HeaderType from "../interfaces/Header";
+import type Photographer from "../interfaces/Photographer";
+const header = await fetchApi<HeaderType>({
+	endpoint: '/header?populate=*',
+	wrappedByKey: "data",
+}) as HeaderType;
+const photographer = await fetchApi({
+	endpoint: '/photographer?populate=*',
+	wrappedByKey: "data",
+}) as Photographer;
 ---
 
-<Layout>
-	<Welcome />
+<Layout photographer={photographer} header={header}>
+	This is home page.
 </Layout>

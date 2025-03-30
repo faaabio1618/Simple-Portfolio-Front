@@ -1,0 +1,62 @@
+---
+import type {Link} from '../interfaces/Header';
+import type Photographer from '../interfaces/Photographer';
+
+const {links, photographer}: { links: Link[]; photographer: Photographer } = Astro.props as {
+    links: Link[];
+    photographer: Photographer
+};
+const currentPath = new URL(Astro.request.url).pathname;
+---
+
+<header class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
+    <div class="navbar-start">
+        <div class="dropdown">
+            <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/>
+                </svg>
+            </div>
+            <ul tabindex="0"
+                class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                {links.map(link => {
+                    if (link.Url.replace(/\/$/, '') === currentPath.replace(/\/$/, '')) {
+                        return (
+                                <li class="text-lg link-hover" id={`link__${link.id}`}><a href="#">{link.Label}</a></li>
+                        )
+                    } else {
+                        return (
+                                <li class="text-lg link-hover" id={`link_${link.id}`}><a
+                                        href={link.Url}>{link.Label}</a></li>
+                        );
+                    }
+                })}
+            </ul>
+        </div>
+        <a class="text-2xl font-mono" href="/">{photographer.Name} {photographer.Surname}</a>
+    </div>
+    <div class="navbar-end hidden lg:flex mr-3 font-mono">
+        <ul class="menu menu-horizontal px-1">
+            {links.map((link, index) => {
+                const divider = index === links.length - 1 ? '' :
+                        <div class="divider divider-horizontal"></div>;
+                let res;
+                if (link.Url.replace(/\/$/, '') === currentPath.replace(/\/$/, '')) {
+                    res =
+                            <li class="text-lg link-hover" id={`__l_${link.id}`}>
+                                <a href="#">{link.Label}</a>
+                            </li>;
+                } else {
+                    res =
+                            <li class="text-lg link-hover" id={`_l_${link.id}`}>
+                                <a href={link.Url}>{link.Label}</a>
+                            </li>;
+                }
+                return (
+                        <>{res}{divider}</>
+                );
+            })}
+        </ul>
+    </div>
+</header>

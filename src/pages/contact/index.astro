@@ -1,0 +1,78 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import type Photographer from "../../interfaces/Photographer";
+import fetchApi from "../../lib/strapi";
+import type HeaderType from "../../interfaces/Header";
+
+const header = await fetchApi<HeaderType>({
+    endpoint: '/header?populate=*',
+    wrappedByKey: "data",
+}) as HeaderType;
+const photographer = await fetchApi({
+    endpoint: '/photographer?populate=*',
+    wrappedByKey: "data",
+}) as Photographer;
+---
+
+<Layout photographer={photographer} header={header}>
+    <div class=" font-mono xl drop-shadow-xl w-full flex items-stretch px-5 xl:px-5 py-5">
+        <div class="flex justify-center items-center w-full h-full px-5 ">
+            <div>
+                <h1 class="text-4xl font-mono text-primary">Contact me</h1>
+                <div class="w-full mt-5 sm:mt-8">
+                    <form name="contact" method="POST" data-netlify="true"
+                          action="/contact/success"
+                          class="mx-auto w-full sm:max-w-md md:max-w-lg flex flex-col gap-5">
+                        <div class="flex flex-col">
+                            <label>
+                                Your Name
+                                <input
+                                        type="text"
+                                        required
+                                        placeholder="Enter Your Name"
+                                        class="input input-primary w-full validator"
+                                />
+                            </label>
+                        </div>
+                        <label>
+                            Email
+                            <input
+                                    type="text"
+                                    required
+                                    placeholder="Enter Your Email"
+                                    class="input input-bordered input-primary w-full validator"
+                            />
+                        </label>
+                        <label>
+                            Phone Number
+                            <input
+                                    type="text"
+                                    required
+                                    placeholder="Enter Your Phone No"
+                                    class="input input-bordered input-primary w-full validator"
+                            />
+                        </label>
+                        <label>
+                            Message
+                            <textarea
+                                    placeholder="Enter your message"
+                                    required
+                                    rows="5"
+                                    cols="25"
+                                    class="w-full textarea-xl textarea-primary textarea validator">
+                            </textarea>
+                        </label>
+                        <div class="flex flex-col md:flex-row gap-2 md:gap-4 justify-center items-center">
+                            <button class="btn btn-active btn-primary btn-block " type="submit">
+                                Send
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</Layout>
+
+
