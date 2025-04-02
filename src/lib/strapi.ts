@@ -1,4 +1,5 @@
 import pkg from '@apollo/client';
+
 const {ApolloClient, gql, InMemoryCache} = pkg;
 import type Portfolio from "../interfaces/Portfolio.ts";
 
@@ -34,18 +35,24 @@ export default async function fetchApi<T>({
         });
     }
     const res = await fetch(url.toString());
-    let data = await res.json();
-    console.log(JSON.stringify(data, null, 2));
+    try {
+        let data = await res.json();
 
-    if (wrappedByKey) {
-        data = data[wrappedByKey];
+        if (wrappedByKey) {
+            data = data[wrappedByKey];
+        }
+
+        if (wrappedByList) {
+            data = data[0];
+        }
+        //console.log(JSON.stringify(data, null, 2));
+        return data as T;
+    } catch (e) {
+        console.error(res.status, res.statusText);
+        console.error("Error parsing JSON:", e);
+        throw e;
     }
 
-    if (wrappedByList) {
-        data = data[0];
-    }
-
-    return data as T;
 }
 
 const client = new ApolloClient({
@@ -89,11 +96,24 @@ export async function retrievePortfolio(id: string): Promise<Portfolio> {
         status: "PUBLISHED"
     };
 
-    const {data} = await client.query({
-        query,
-        variables,
-    });
-    console.log(JSON.stringify(data, null, 2));
-    return data.portfolio as Portfolio;
+    try {
+        const res = await fetch(`${import.meta.env.STRAPI_URL}/graphql`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: query.loc?.source?.body || String(query),
+                variables,
+            }),
+        });
+        console.log("Headers:", res.headers);
+        const jsonResponse = await res.json();
+        return jsonResponse.data.portfolio as Portfolio;
+    } catch (error) {
+        console.error("Error fetching portfolio:", error);
+        throw error;
+    }
+
 }
 
