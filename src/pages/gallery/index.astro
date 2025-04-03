@@ -1,18 +1,10 @@
 ---
 export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
-import fetchApi, {retrievePortfolio} from '../../lib/strapi';
-import type HeaderType from "../../interfaces/Header";
-import type Photographer from "../../interfaces/Photographer";
-const header = await fetchApi<HeaderType>({
-    endpoint: '/header?populate=*',
-    wrappedByKey: "data",
-}) as HeaderType;
-const photographer = await fetchApi({
-    endpoint: '/photographer?populate=*',
-    wrappedByKey: "data",
-}) as Photographer;
-const portfolio = await retrievePortfolio(import.meta.env.PORTFOLIO_ID);
+import {retrieveHeader, retrievePhotographer, retrievePortfolio} from '../../lib/strapi';
+const header = await retrieveHeader();
+const photographer = await retrievePhotographer();
+const portfolio = await retrievePortfolio(photographer.MainPortfolio.documentId);
 ---
 
 <Layout title="Portfolio" header={header} photographer={photographer}>

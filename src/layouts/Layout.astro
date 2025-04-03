@@ -2,10 +2,10 @@
 import '../styles/global.css';
 
 import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 const {title}: { title?: string } = Astro.props as {
     title?: string
 };
-import fetchApi from '../lib/strapi';
 import type HeaderType from "../interfaces/Header";
 import type Photographer from "../interfaces/Photographer";
 const {photographer, header}: { photographer: Photographer, header: HeaderType } = Astro.props as {
@@ -22,12 +22,17 @@ const pageTitle = title ? `${title} - ${photographer.Name} ${photographer.Surnam
     <meta name="viewport" content="width=device-width"/>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
     <meta name="generator" content={Astro.generator}/>
-    <link rel="stylesheet" href="https://use.typekit.net/nsb5rjc.css">
+    <link rel="stylesheet" href="https://use.typekit.net/nsb5rjc.css"/>
     <title>{pageTitle}</title>
+    <script async src="//www.instagram.com/embed.js"/>
 </head>
-<body class="font-sans">
+<body class="font-sans flex flex-col min-h-screen">
 <Header links={header.Links} photographer={photographer}/>
-<slot/>
+<main class="flex-grow">
+    <slot/>
+</main>
+<Footer photographer={photographer}/>
+
 </body>
 </html>
 

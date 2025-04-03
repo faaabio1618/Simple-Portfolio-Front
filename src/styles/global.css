@@ -9,10 +9,11 @@
     color-scheme: "dark";
     --color-base-100: oklch(98% 0.002 247.839);
     --color-base-200: oklch(96% 0.003 264.542);
+
     --color-base-300: oklch(92% 0.006 264.531);
     --color-base-content: oklch(12% 0.042 264.695);
-    --color-primary: #45aab8;
-    --color-primary-content: oklch(26% 0.051 172.552);
+    --color-primary: #000622;
+    --color-primary-content: oklch(0.845 0 89.876);
     --color-secondary: #F76D57;
     --color-secondary-content: oklch(28% 0.066 53.813);
     --color-accent: #F76D57;
@@ -34,7 +35,7 @@
     --size-field: 0.25rem;
     --border: 1px;
     --depth: 1;
-    --noise: 1;
+    --noise: 0;
 
     name: "bration";
     default: true;

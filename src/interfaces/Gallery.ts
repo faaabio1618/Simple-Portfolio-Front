@@ -1,5 +1,6 @@
-export default interface Gallery {
-    id: string;
+import type StrapiInterface from "./Strapi.ts";
+
+export default interface Gallery extends StrapiInterface {
     Title: string;
     Description: string;
     Date: Date;
@@ -13,12 +14,12 @@ export default interface Gallery {
     }[];
 }
 
-export interface Image {
-    id: string;
+export interface Image extends StrapiInterface {
     name: string;
     alternativeText: string;
     caption: string;
     width: number;
+    mime: string;
     height: number;
     ext: string;
     size: number;

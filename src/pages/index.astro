@@ -1,19 +1,51 @@
 ---
+import Instagram from "../components/Instagram.astro";
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
-import fetchApi from "../lib/strapi";
-import type HeaderType from "../interfaces/Header";
-import type Photographer from "../interfaces/Photographer";
-const header = await fetchApi<HeaderType>({
-	endpoint: '/header?populate=*',
-	wrappedByKey: "data",
-}) as HeaderType;
-const photographer = await fetchApi({
-	endpoint: '/photographer?populate=*',
-	wrappedByKey: "data",
-}) as Photographer;
+import {retrieveHeader, retrievePhotographer} from "../lib/strapi";
+const header = await retrieveHeader();
+const photographer = await retrievePhotographer();
+const isCoverSingleImage = photographer.Cover && photographer.Cover.length === 1 && photographer.Cover[0].mime.includes('image');
+const isCoverVideo = photographer.Cover && photographer.Cover.length >= 1 && photographer.Cover[0].mime.includes('video');
+const isCoverVideoWithPoster = photographer.Cover && photographer.Cover.length > 1 && photographer.Cover[0].mime.includes('video') &&
+    photographer.Cover[1].mime.includes('image');
+const instagramPosts = photographer.InstagramPosts;
 ---
 
 <Layout photographer={photographer} header={header}>
-	This is home page.
+    {isCoverSingleImage && (
+            <div class="w-full h-[50vh] relative">
+                <img
+                        src={photographer.Cover[0].url}
+                        alt={photographer.Cover[0].alternativeText || `${photographer.Name} ${photographer.Surname}`}
+                        class="w-full h-full object-cover"
+                />
+            </div>
+    )}
+    {isCoverVideo && (
+            <div class="w-full h-[50vh] relative">
+                <video
+                        src={photographer.Cover[0].url}
+                        class="w-full h-full object-cover"
+                        autoplay
+
+                        poster={isCoverVideoWithPoster ?
+                            photographer.Cover[1].url : photographer.Cover[0].url}
+                        loop
+                        muted
+                />
+            </div>
+    )}
+<div id="instagram-feed" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mx-auto max-w-6xl px-4 my-8">
+    {instagramPosts.map((post) => (
+        <div class="flex justify-center">
+            <Instagram instagramPost={post}/>
+        </div>
+    ))}
+<div class="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center mt-6">
+    <a href=`https://instagram.com/${photographer.Instagram.replace("@", "")}` class="text-center hover:underline  px-4 py-2 transition ">
+        View more on Instagram
+    </a>
+</div>
+</div>
 </Layout>

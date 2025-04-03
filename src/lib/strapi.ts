@@ -2,6 +2,9 @@ import pkg from '@apollo/client';
 
 const {ApolloClient, gql, InMemoryCache} = pkg;
 import type Portfolio from "../interfaces/Portfolio.ts";
+import type Photographer from "../interfaces/Photographer.ts";
+import type HeaderType from "../interfaces/Header.ts";
+import type Gallery from "../interfaces/Gallery.ts";
 
 interface Props {
     endpoint: string;
@@ -59,6 +62,33 @@ const client = new ApolloClient({
     uri: `${import.meta.env.STRAPI_URL}/graphql`,
     cache: new InMemoryCache(),
 });
+
+export async function retrievePhotographer(): Promise<Photographer> {
+    let photographer = await fetchApi({
+        endpoint: '/photographer?populate=*',
+        wrappedByKey: "data",
+    });
+    console.log(photographer);
+    return photographer;
+}
+
+export async function retrieveHeader(): Promise<HeaderType> {
+    return await fetchApi<HeaderType>({
+        endpoint: '/header?populate=*',
+        wrappedByKey: "data",
+    });
+}
+
+export async function retrieveGallery(slug: string | undefined): Promise<Gallery | null> {
+    if (!slug) {
+        return null;
+    }
+    const galleries = await fetchApi<Gallery[] | null>({
+        endpoint: `/galleries?filters[Slug][$eq]=${slug}&populate=*`,
+        wrappedByKey: "data",
+    });
+    return galleries && galleries.length > 0 ? galleries[0] : null;
+}
 
 export async function retrievePortfolio(id: string): Promise<Portfolio> {
     const query = gql`

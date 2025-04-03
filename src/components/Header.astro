@@ -9,7 +9,7 @@ const {links, photographer}: { links: Link[]; photographer: Photographer } = Ast
 const currentPath = new URL(Astro.request.url).pathname;
 ---
 
-<header class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
+<header class="navbar bg-base-100 shadow-sm sticky top-0 z-50 py-6 px-5">
     <div class="navbar-start">
         <div class="dropdown">
             <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
@@ -36,27 +36,47 @@ const currentPath = new URL(Astro.request.url).pathname;
         </div>
         <a class="text-2xl font-mono" href="/">{photographer.Name} {photographer.Surname}</a>
     </div>
-    <div class="navbar-end hidden lg:flex mr-3 font-mono">
+<div class="navbar-end hidden lg:flex font-mono">
         <ul class="menu menu-horizontal px-1">
             {links.map((link, index) => {
-                const divider = index === links.length - 1 ? '' :
-                        <div class="divider divider-horizontal"></div>;
-                let res;
-                if (link.Url.replace(/\/$/, '') === currentPath.replace(/\/$/, '')) {
-                    res =
-                            <li class="text-lg link-hover" id={`__l_${link.id}`}>
-                                <a href="#">{link.Label}</a>
-                            </li>;
-                } else {
-                    res =
-                            <li class="text-lg link-hover" id={`_l_${link.id}`}>
-                                <a href={link.Url}>{link.Label}</a>
-                            </li>;
+                if (index !== links.length - 1) {
+                    let res;
+                    if (link.Url.replace(/\/$/, '') === currentPath.replace(/\/$/, '')) {
+                        res =
+                                <li class="text-lg link-hover" id={`__l_${link.id}`}>
+                                    <a href="#">{link.Label}</a>
+                                </li>;
+                    } else {
+                        res =
+                                <li class="text-lg link-hover" id={`_l_${link.id}`}>
+                                    <a href={link.Url}>{link.Label}</a>
+                                </li>;
+                    }
+                    return (
+                            <>{res}<div class="divider divider-horizontal"></div></>
+                    );
                 }
-                return (
-                        <>{res}{divider}</>
-                );
             })}
         </ul>
+        {links.length > 0 && (
+            <div class="">
+                {(() => {
+                    const lastLink = links[links.length - 1];
+                    if (lastLink.Url.replace(/\/$/, '') === currentPath.replace(/\/$/, '')) {
+                        return (
+                            <div class="text-lg link-hover" id={`__l_${lastLink.id}`}>
+                                <a href="#">{lastLink.Label}</a>
+                            </div>
+                        );
+                    } else {
+                        return (
+                            <div class="text-lg link-hover" id={`_l_${lastLink.id}`}>
+                                <a href={lastLink.Url}>{lastLink.Label}</a>
+                            </div>
+                        );
+                    }
+                })()}
+            </div>
+        )}
     </div>
 </header>
