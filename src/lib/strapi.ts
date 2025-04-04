@@ -67,8 +67,8 @@ export async function retrievePhotographer(): Promise<Photographer> {
     let photographer = await fetchApi({
         endpoint: '/photographer?populate=*',
         wrappedByKey: "data",
-    });
-    console.log(photographer);
+    }) as Photographer;
+    // console.log(photographer);
     return photographer;
 }
 
@@ -137,7 +137,7 @@ export async function retrievePortfolio(id: string): Promise<Portfolio> {
                 variables,
             }),
         });
-        console.log("Headers:", res.headers);
+        // console.log("Headers:", res.headers);
         const jsonResponse = await res.json();
         return jsonResponse.data.portfolio as Portfolio;
     } catch (error) {

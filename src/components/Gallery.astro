@@ -1,0 +1,14 @@
+---
+import GalleryMasonry from "./GalleryMasonry.jsx";
+import GallerySlider from "./GallerySlider.jsx";
+import type {Image} from "../interfaces/Gallery";
+import {GalleryStyles} from "../interfaces/Gallery";
+
+const {pictures, style} = Astro.props as { pictures: Image[], style: GalleryStyles };
+const defaultedStyle = style || GalleryStyles.MASONRY;
+---
+{defaultedStyle===GalleryStyles.MASONRY &&
+<GalleryMasonry items={pictures} client:only="react"/> }
+
+{defaultedStyle===GalleryStyles.SLIDER &&
+<GallerySlider items={pictures} client:only="react"/> }

@@ -7,11 +7,17 @@ export default interface Gallery extends StrapiInterface {
     Pictures: Image[];
     Cover: Image;
     Slug: string;
+    Style : GalleryStyles;
     see_also: {
         url: string;
         title: string;
         cover: Image;
     }[];
+}
+
+export enum GalleryStyles {
+    MASONRY = 'Masonry',
+    SLIDER = 'Slide'
 }
 
 export interface Image extends StrapiInterface {

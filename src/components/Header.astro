@@ -9,7 +9,7 @@ const {links, photographer}: { links: Link[]; photographer: Photographer } = Ast
 const currentPath = new URL(Astro.request.url).pathname;
 ---
 
-<header class="navbar bg-base-100 shadow-sm sticky top-0 z-50 py-6 px-5">
+<header class="navbar bg-base-100 shadow-sm sticky top-0 z-50 py-6 px-5 max-h-16">
     <div class="navbar-start">
         <div class="dropdown">
             <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">

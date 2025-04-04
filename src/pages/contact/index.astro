@@ -8,12 +8,13 @@ const photographer = await retrievePhotographer();
 ---
 
 <Layout photographer={photographer} header={header}>
-    <div class=" font-mono xl drop-shadow-xl w-full flex items-stretch px-5 xl:px-5 py-5">
+    <div class="font-mono xl drop-shadow-xl w-full flex items-stretch px-5 xl:px-5 py-5">
         <div class="flex justify-center items-center w-full h-full px-5 ">
             <div>
                 <h1 class="text-4xl font-mono text-primary">Contact me</h1>
                 <div class="w-full mt-5 sm:mt-8">
                     <form name="contact" method="POST" data-netlify="true"
+                          netifly
                           action="/contact/success"
                           class="mx-auto w-full sm:max-w-md md:max-w-lg flex flex-col gap-5">
                         <div class="flex flex-col">
