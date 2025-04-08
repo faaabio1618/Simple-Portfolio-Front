@@ -1,14 +1,18 @@
 ---
-import GalleryMasonry from "./GalleryMasonry.jsx";
-import GallerySlider from "./GallerySlider.jsx";
-import type {Image} from "../interfaces/Gallery";
-import {GalleryStyles} from "../interfaces/Gallery";
+import GalleryMasonry from "./GalleryMasonry.tsx";
+import GallerySlider from "./GallerySlider.tsx";
+import type {GalleryStyle, Image} from "../interfaces/Gallery";
+import {retrieveDefaultStyle} from "../lib/strapi";
 
-const {pictures, style} = Astro.props as { pictures: Image[], style: GalleryStyles };
-const defaultedStyle = style || GalleryStyles.MASONRY;
+const {pictures, style} = Astro.props as { pictures: Image[], style?: GalleryStyle };
+const defaultedStyle = style ?? await retrieveDefaultStyle();
 ---
-{defaultedStyle===GalleryStyles.MASONRY &&
-<GalleryMasonry items={pictures} client:only="react"/> }
+<div class="gallery">
+    {defaultedStyle === undefined && <p class="text-2xl font-bold">Gallery style and default style not defined.</p>}
 
-{defaultedStyle===GalleryStyles.SLIDER &&
-<GallerySlider items={pictures} client:only="react"/> }
+    {defaultedStyle?.MainStyle === "Tiles" &&
+            <GalleryMasonry items={pictures} client:only="react" style={defaultedStyle}/>}
+
+    {defaultedStyle?.MainStyle === "Slider" &&
+            <GallerySlider items={pictures} client:only="react"/>}
+</div>

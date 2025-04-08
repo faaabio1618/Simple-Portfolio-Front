@@ -14,7 +14,6 @@ export default interface Photographer extends StrapiInterface {
     PhoneNumber: string;
     InstagramPosts: InstagramPost[];
     Address: string;
-    Logo: Image;
     Cover: Image[];
     MainPortfolio: Portfolio;
     OtherPortfolios: Portfolio[];

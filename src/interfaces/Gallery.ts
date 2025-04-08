@@ -7,7 +7,7 @@ export default interface Gallery extends StrapiInterface {
     Pictures: Image[];
     Cover: Image;
     Slug: string;
-    Style : GalleryStyles;
+    Style: GalleryStyle;
     see_also: {
         url: string;
         title: string;
@@ -15,10 +15,6 @@ export default interface Gallery extends StrapiInterface {
     }[];
 }
 
-export enum GalleryStyles {
-    MASONRY = 'Masonry',
-    SLIDER = 'Slide'
-}
 
 export interface Image extends StrapiInterface {
     name: string;
@@ -31,4 +27,13 @@ export interface Image extends StrapiInterface {
     size: number;
     url: string;
     previewUrl?: string;
+}
+
+export interface GalleryStyle extends StrapiInterface {
+    Name: string;
+    MainStyle: "Tiles" | "Slider";
+    ShowTitles: boolean;
+    NrColumns: number;
+    ShowNextGallery: boolean;
+    Default: boolean;
 }

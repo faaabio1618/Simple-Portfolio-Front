@@ -5,6 +5,7 @@ import type Portfolio from "../interfaces/Portfolio.ts";
 import type Photographer from "../interfaces/Photographer.ts";
 import type HeaderType from "../interfaces/Header.ts";
 import type Gallery from "../interfaces/Gallery.ts";
+import type {GalleryStyle} from "../interfaces/Gallery.ts";
 
 interface Props {
     endpoint: string;
@@ -88,6 +89,18 @@ export async function retrieveGallery(slug: string | undefined): Promise<Gallery
         wrappedByKey: "data",
     });
     return galleries && galleries.length > 0 ? galleries[0] : null;
+}
+
+export async function retrieveDefaultStyle(): Promise<GalleryStyle | undefined> {
+    const styles = await fetchApi<GalleryStyle[]>({
+        endpoint: '/gallery-styles?filters[Default][$eq]=true&populate=*',
+        wrappedByKey: "data",
+    });
+    if (styles.length > 0) {
+        return styles[0];
+    } else {
+        return undefined;
+    }
 }
 
 export async function retrievePortfolio(id: string): Promise<Portfolio> {
