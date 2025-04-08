@@ -1,6 +1,6 @@
 import type StrapiInterface from "./Strapi.ts";
 
-export default interface Gallery extends StrapiInterface {
+export interface Gallery extends StrapiInterface {
     Title: string;
     Description: string;
     Date: Date;
@@ -35,5 +35,4 @@ export interface GalleryStyle extends StrapiInterface {
     ShowTitles: boolean;
     NrColumns: number;
     ShowNextGallery: boolean;
-    Default: boolean;
 }

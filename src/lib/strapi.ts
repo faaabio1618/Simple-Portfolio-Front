@@ -1,11 +1,10 @@
 import pkg from '@apollo/client';
-
-const {ApolloClient, gql, InMemoryCache} = pkg;
 import type Portfolio from "../interfaces/Portfolio.ts";
 import type Photographer from "../interfaces/Photographer.ts";
-import type HeaderType from "../interfaces/Header.ts";
-import type Gallery from "../interfaces/Gallery.ts";
-import type {GalleryStyle} from "../interfaces/Gallery.ts";
+import type {Gallery, GalleryStyle} from "../interfaces/Gallery.ts";
+import type Site from "../interfaces/Site.ts";
+
+const {ApolloClient, gql, InMemoryCache} = pkg;
 
 interface Props {
     endpoint: string;
@@ -64,20 +63,38 @@ const client = new ApolloClient({
     cache: new InMemoryCache(),
 });
 
-export async function retrievePhotographer(): Promise<Photographer> {
-    let photographer = await fetchApi({
+async function retrieveSite(): Promise<Site> {
+    return await fetchApi({
+        endpoint: '/site?populate=*',
+        wrappedByKey: "data",
+    }) as Site;
+}
+
+async function retrievePhotographer(): Promise<Photographer> {
+    return await fetchApi({
         endpoint: '/photographer?populate=*',
         wrappedByKey: "data",
     }) as Photographer;
-    // console.log(photographer);
-    return photographer;
 }
 
-export async function retrieveHeader(): Promise<HeaderType> {
-    return await fetchApi<HeaderType>({
-        endpoint: '/header?populate=*',
-        wrappedByKey: "data",
-    });
+export async function retrieveMain(): Promise<{ site: Site, photographer: Photographer }> {
+    /*
+    TODO graphql
+        query Main{
+          photographer {
+            documentId
+          }
+          site {
+            documentId
+          }
+          header {
+            documentId
+          }
+        }
+     */
+    const site = await retrieveSite();
+    const photographer = await retrievePhotographer();
+    return {site, photographer};
 }
 
 export async function retrieveGallery(slug: string | undefined): Promise<Gallery | null> {
@@ -89,18 +106,6 @@ export async function retrieveGallery(slug: string | undefined): Promise<Gallery
         wrappedByKey: "data",
     });
     return galleries && galleries.length > 0 ? galleries[0] : null;
-}
-
-export async function retrieveDefaultStyle(): Promise<GalleryStyle | undefined> {
-    const styles = await fetchApi<GalleryStyle[]>({
-        endpoint: '/gallery-styles?filters[Default][$eq]=true&populate=*',
-        wrappedByKey: "data",
-    });
-    if (styles.length > 0) {
-        return styles[0];
-    } else {
-        return undefined;
-    }
 }
 
 export async function retrievePortfolio(id: string): Promise<Portfolio> {

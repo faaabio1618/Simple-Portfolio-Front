@@ -3,13 +3,12 @@ import Gallery from "../../components/Gallery.astro";
 const {gallerySlug} = Astro.params;
 export const prerender = false;
 import Layout from '../../layouts/Layout.astro';
-import {retrieveGallery, retrieveHeader, retrievePhotographer} from '../../lib/strapi';
-const header = await retrieveHeader();
-const photographer = await retrievePhotographer();
+import {retrieveMain, retrieveGallery} from "../../lib/strapi";
+const {site, photographer} = await retrieveMain();
 const gallery_ = await retrieveGallery(gallerySlug);
 ---
 
-<Layout title="Portfolio" header={header} photographer={photographer}>
+<Layout title="Portfolio" photographer={photographer} site={site}>
 
     {!gallery_ &&
             <div class="text-center text-2xl font-bold">Gallery not found
@@ -26,5 +25,5 @@ const gallery_ = await retrieveGallery(gallerySlug);
             </div>
     }
     {gallery_ &&
-            <Gallery pictures={gallery_.Pictures} style={gallery_.Style}/>}
+            <Gallery pictures={gallery_.Pictures} style={gallery_.Style} site={site}/>}
 </Layout>

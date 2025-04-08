@@ -1,10 +1,10 @@
 ---
-import type {Link} from '../interfaces/Header';
 import type Photographer from '../interfaces/Photographer';
+import type Site from "../interfaces/Site";
 
-const {links, photographer}: { links: Link[]; photographer: Photographer } = Astro.props as {
-    links: Link[];
-    photographer: Photographer
+const {photographer, site}: { photographer: Photographer, site: Site } = Astro.props as {
+    photographer: Photographer,
+    site: Site
 };
 const currentPath = new URL(Astro.request.url).pathname;
 ---
@@ -20,15 +20,15 @@ const currentPath = new URL(Astro.request.url).pathname;
             </div>
             <ul tabindex="0"
                 class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-                {links.map(link => {
-                    if (link.Url.replace(/\/$/, '') === currentPath.replace(/\/$/, '')) {
+                {site.Menu.map(link => {
+                    if (link.Link.replace(/\/$/, '') === currentPath.replace(/\/$/, '')) {
                         return (
                                 <li class="text-lg link-hover" id={`link__${link.id}`}><a href="#">{link.Label}</a></li>
                         )
                     } else {
                         return (
                                 <li class="text-lg link-hover" id={`link_${link.id}`}><a
-                                        href={link.Url}>{link.Label}</a></li>
+                                        href={link.Link}>{link.Label}</a></li>
                         );
                     }
                 })}
@@ -36,12 +36,12 @@ const currentPath = new URL(Astro.request.url).pathname;
         </div>
         <a class="text-2xl font-mono" href="/">{photographer.Name} {photographer.Surname}</a>
     </div>
-<div class="navbar-end hidden lg:flex font-mono">
+    <div class="navbar-end hidden lg:flex font-mono">
         <ul class="menu menu-horizontal px-1">
-            {links.map((link, index) => {
-                if (index !== links.length - 1) {
+            {site.Menu.map((link, index) => {
+                if (index !== site.Menu.length - 1) {
                     let res;
-                    if (link.Url.replace(/\/$/, '') === currentPath.replace(/\/$/, '')) {
+                    if (link.Link.replace(/\/$/, '') === currentPath.replace(/\/$/, '')) {
                         res =
                                 <li class="text-lg link-hover" id={`__l_${link.id}`}>
                                     <a href="#">{link.Label}</a>
@@ -49,34 +49,36 @@ const currentPath = new URL(Astro.request.url).pathname;
                     } else {
                         res =
                                 <li class="text-lg link-hover" id={`_l_${link.id}`}>
-                                    <a href={link.Url}>{link.Label}</a>
+                                    <a href={link.Link}>{link.Label}</a>
                                 </li>;
                     }
                     return (
-                            <>{res}<div class="divider divider-horizontal"></div></>
+                            <>{res}
+                                <div class="divider divider-horizontal"></div>
+                            </>
                     );
                 }
             })}
         </ul>
-        {links.length > 0 && (
-            <div class="">
-                {(() => {
-                    const lastLink = links[links.length - 1];
-                    if (lastLink.Url.replace(/\/$/, '') === currentPath.replace(/\/$/, '')) {
-                        return (
-                            <div class="text-lg link-hover" id={`__l_${lastLink.id}`}>
-                                <a href="#">{lastLink.Label}</a>
-                            </div>
-                        );
-                    } else {
-                        return (
-                            <div class="text-lg link-hover" id={`_l_${lastLink.id}`}>
-                                <a href={lastLink.Url}>{lastLink.Label}</a>
-                            </div>
-                        );
-                    }
-                })()}
-            </div>
+        {site.Menu.length > 0 && (
+                <div class="">
+                    {(() => {
+                        const lastLink = site.Menu[site.Menu.length - 1];
+                        if (lastLink.Link.replace(/\/$/, '') === currentPath.replace(/\/$/, '')) {
+                            return (
+                                    <div class="text-lg link-hover" id={`__l_${lastLink.id}`}>
+                                        <a href="#">{lastLink.Label}</a>
+                                    </div>
+                            );
+                        } else {
+                            return (
+                                    <div class="text-lg link-hover" id={`_l_${lastLink.id}`}>
+                                        <a href={lastLink.Link}>{lastLink.Label}</a>
+                                    </div>
+                            );
+                        }
+                    })()}
+                </div>
         )}
     </div>
 </header>

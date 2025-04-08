@@ -2,10 +2,10 @@
 import GalleryMasonry from "./GalleryMasonry.tsx";
 import GallerySlider from "./GallerySlider.tsx";
 import type {GalleryStyle, Image} from "../interfaces/Gallery";
-import {retrieveDefaultStyle} from "../lib/strapi";
+import type Site from "../interfaces/Site";
 
-const {pictures, style} = Astro.props as { pictures: Image[], style?: GalleryStyle };
-const defaultedStyle = style ?? await retrieveDefaultStyle();
+const {pictures, style, site} = Astro.props as { pictures: Image[], style?: GalleryStyle, site: Site };
+const defaultedStyle = style ?? site.DefaultGalleryStyle;
 ---
 <div class="gallery">
     {defaultedStyle === undefined && <p class="text-2xl font-bold">Gallery style and default style not defined.</p>}

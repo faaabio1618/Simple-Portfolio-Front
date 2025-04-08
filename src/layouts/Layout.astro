@@ -6,11 +6,11 @@ import Footer from "../components/Footer.astro";
 const {title}: { title?: string } = Astro.props as {
     title?: string
 };
-import type HeaderType from "../interfaces/Header";
 import type Photographer from "../interfaces/Photographer";
-const {photographer, header}: { photographer: Photographer, header: HeaderType } = Astro.props as {
+import type Site from "../interfaces/Site";
+const {photographer, site}: { photographer: Photographer, site: Site } = Astro.props as {
     photographer: Photographer,
-    header: HeaderType
+    site: Site
 }
 const pageTitle = title ? `${title} - ${photographer.Name} ${photographer.Surname}` : `${photographer.Name} ${photographer.Surname}`;
 ---
@@ -21,16 +21,18 @@ const pageTitle = title ? `${title} - ${photographer.Name} ${photographer.Surnam
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width"/>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="generator" content="Bration Portfolio - Built by filippi.dev"/>
     <meta name="description" content=`Portfolio website of photographer ${photographer.Name} ${photographer.Surname}`/>
     <meta name="keywords" content=`photography, portfolio, ${photographer.Name} ${photographer.Surname}`/>
     <meta name="author" content={`${photographer.Name} ${photographer.Surname}`}/>
     <link rel="stylesheet" href="https://use.typekit.net/nsb5rjc.css"/>
     <title>{pageTitle}</title>
+    <script src="https://static.elfsight.com/platform/platform.js" async is:inline/>
     <script async src="//www.instagram.com/embed.js"/>
 </head>
 <body class="font-sans flex flex-col min-h-screen">
-<Header links={header.Links} photographer={photographer}/>
+<Header photographer={photographer} site={site}/>
 <main class="flex-grow">
     <slot/>
 </main>

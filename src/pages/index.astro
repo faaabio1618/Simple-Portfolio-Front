@@ -2,17 +2,15 @@
 import Instagram from "../components/Instagram.astro";
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
-import {retrieveHeader, retrievePhotographer} from "../lib/strapi";
-const header = await retrieveHeader();
-const photographer = await retrievePhotographer();
+import {retrieveMain} from "../lib/strapi";
+const {site, photographer} = await retrieveMain();
 const isCoverSingleImage = photographer.Cover && photographer.Cover.length === 1 && photographer.Cover[0].mime.includes('image');
 const isCoverVideo = photographer.Cover && photographer.Cover.length >= 1 && photographer.Cover[0].mime.includes('video');
 const isCoverVideoWithPoster = photographer.Cover && photographer.Cover.length > 1 && photographer.Cover[0].mime.includes('video') &&
     photographer.Cover[1].mime.includes('image');
-const instagramPosts = photographer.InstagramPosts;
 ---
 
-<Layout photographer={photographer} header={header}>
+<Layout photographer={photographer} site={site}>
     {isCoverSingleImage && (
             <div class="w-full h-[50vh] relative">
                 <img
@@ -36,16 +34,8 @@ const instagramPosts = photographer.InstagramPosts;
                 />
             </div>
     )}
-<div id="instagram-feed" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mx-auto max-w-6xl px-4 my-8">
-    {instagramPosts.map((post) => (
-        <div class="flex justify-center">
-            <Instagram instagramPost={post}/>
-        </div>
-    ))}
-<div class="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center mt-6">
-    <a href=`https://instagram.com/${photographer.Instagram.replace("@", "")}` class="text-center hover:underline  px-4 py-2 transition ">
-        View more on Instagram
-    </a>
-</div>
-</div>
+    {site.ShowInstagram &&
+            <div class="flex justify-center w-full max-w-[80%] mx-auto">
+                <div class="elfsight-app-9b82b59d-fd48-42d2-ab56-3490ef7aa921" data-elfsight-app-lazy></div>
+            </div>}
 </Layout>

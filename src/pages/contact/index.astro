@@ -1,13 +1,11 @@
 ---
 export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
-import {retrieveHeader, retrievePhotographer} from "../../lib/strapi";
-
-const header = await retrieveHeader();
-const photographer = await retrievePhotographer();
+import {retrieveMain } from "../../lib/strapi";
+const {site, photographer} = await retrieveMain();
 ---
 
-<Layout photographer={photographer} header={header}>
+<Layout photographer={photographer} site={site}>
     <div class="font-mono xl drop-shadow-xl w-full flex items-stretch px-5 xl:px-5 py-5">
         <div class="flex justify-center items-center w-full h-full px-5 ">
             <div>

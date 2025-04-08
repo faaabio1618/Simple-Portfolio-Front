@@ -11,7 +11,9 @@ import netlify from '@astrojs/netlify';
 const netlifyConfiguration = {};
 
 // https://astro.build/config
+
 export default defineConfig({
+  site: 'https://photodemo.filippi.dev',
   integrations: [react(), sitemap()],
   output: "server",
   adapter: netlify(netlifyConfiguration),
