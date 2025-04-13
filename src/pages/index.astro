@@ -1,41 +1,54 @@
 ---
-import Instagram from "../components/Instagram.astro";
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import {retrieveMain} from "../lib/strapi";
 const {site, photographer} = await retrieveMain();
-const isCoverSingleImage = photographer.Cover && photographer.Cover.length === 1 && photographer.Cover[0].mime.includes('image');
-const isCoverVideo = photographer.Cover && photographer.Cover.length >= 1 && photographer.Cover[0].mime.includes('video');
-const isCoverVideoWithPoster = photographer.Cover && photographer.Cover.length > 1 && photographer.Cover[0].mime.includes('video') &&
-    photographer.Cover[1].mime.includes('image');
+const coverImage = site.Home.Cover?.find((cover) => cover?.mime.includes('image'));
+const coverVideo = site.Home.Cover?.find((cover) => cover?.mime.includes('video'));
+const isCoverVideoWithPoster = coverVideo && coverImage;
 ---
 
-<Layout photographer={photographer} site={site}>
-    {isCoverSingleImage && (
+<Layout site={site} photographer={photographer}>
+    {!coverVideo && coverImage && (
             <div class="w-full h-[50vh] relative">
                 <img
-                        src={photographer.Cover[0].url}
-                        alt={photographer.Cover[0].alternativeText || `${photographer.Name} ${photographer.Surname}`}
+                        src={coverImage.url}
+                        alt={coverImage.alternativeText || site.Name}
                         class="w-full h-full object-cover"
                 />
             </div>
     )}
-    {isCoverVideo && (
+    {coverVideo && (
             <div class="w-full h-[50vh] relative">
                 <video
-                        src={photographer.Cover[0].url}
+                        src={coverVideo.url}
                         class="w-full h-full object-cover"
                         autoplay
 
-                        poster={isCoverVideoWithPoster ?
-                            photographer.Cover[1].url : photographer.Cover[0].url}
+                        poster={isCoverVideoWithPoster ? coverImage.url : undefined}
                         loop
                         muted
                 />
             </div>
     )}
-    {site.ShowInstagram &&
-            <div class="flex justify-center w-full max-w-[80%] mx-auto">
-                <div class="elfsight-app-9b82b59d-fd48-42d2-ab56-3490ef7aa921" data-elfsight-app-lazy></div>
-            </div>}
+    <div class="flex flex-col justify-center w-full lg:max-w-[80%] max-w-[90%] mx-auto mt-[5%] lg:mt-[5%]">
+        {site.Home.ShowAboutMe &&
+                <div class="w-full h-auto relative">
+                    <div class="w-full h-auto relative">
+                        <div class="prose prose-lg mx-auto">
+                            <h1 class="text-4xl font-mono text-primary hidden">About Me</h1>
+                            <div
+                                    set:html={photographer.AboutMe}
+                                    class="prose prose-lg mx-auto"
+                            />
+                        </div>
+                    </div>
+                </div>
+        }
+        {site.Home.ShowInstagram &&
+                <div class="w-full h-auto relative">
+                    <div class="elfsight-app-9b82b59d-fd48-42d2-ab56-3490ef7aa921" data-elfsight-app-lazy></div>
+                </div>
+        }
+    </div>
 </Layout>

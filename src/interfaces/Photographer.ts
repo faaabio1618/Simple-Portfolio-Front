@@ -1,19 +1,10 @@
-import type {Image} from "./Gallery.ts";
-import type Portfolio from "./Portfolio.ts";
 import type StrapiInterface from "./Strapi.ts";
 
-export interface InstagramPost {
-    Url: string;
-}
-
-export default interface Photographer extends StrapiInterface {
+export default interface Photographer extends StrapiInterface{
     Name: string;
     Surname: string;
-    Email: string;
-    Instagram: string;
-    PhoneNumber: string;
-    Address: string;
-    Cover: Image[];
-    MainPortfolio: Portfolio;
-    OtherPortfolios: Portfolio[];
+    Instagram?: string;
+    Email?: string;
+    PhoneNumber?: string;
+    AboutMe?: string;
 }

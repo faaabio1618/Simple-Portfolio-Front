@@ -1,18 +1,18 @@
 ---
 import GalleryMasonry from "./GalleryMasonry.tsx";
 import GallerySlider from "./GallerySlider.tsx";
-import type {GalleryStyle, Image} from "../interfaces/Gallery";
+import type {Gallery, GalleryStyle, Image} from "../interfaces/Gallery";
 import type Site from "../interfaces/Site";
 
-const {pictures, style, site} = Astro.props as { pictures: Image[], style?: GalleryStyle, site: Site };
+const {gallery, style, site} = Astro.props as { gallery: Gallery, style?: GalleryStyle, site: Site };
 const defaultedStyle = style ?? site.DefaultGalleryStyle;
 ---
 <div class="gallery">
     {defaultedStyle === undefined && <p class="text-2xl font-bold">Gallery style and default style not defined.</p>}
 
     {defaultedStyle?.MainStyle === "Tiles" &&
-            <GalleryMasonry items={pictures} client:only="react" style={defaultedStyle}/>}
+            <GalleryMasonry gallery={gallery} client:only="react" style={defaultedStyle}/>}
 
     {defaultedStyle?.MainStyle === "Slider" &&
-            <GallerySlider items={pictures} client:only="react"/>}
+            <GallerySlider gallery={gallery} client:only="react"/>}
 </div>

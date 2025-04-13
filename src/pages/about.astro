@@ -1,0 +1,24 @@
+---
+export const prerender = true;
+import Layout from '../layouts/Layout.astro';
+import {retrieveMain} from "../lib/strapi";
+const {site, photographer} = await retrieveMain();
+---
+
+<Layout site={site} photographer={photographer}>
+    {
+        <>
+            <div class="w-full h-auto relative">
+                <div class="w-full h-auto relative">
+                    <div class="prose prose-lg max-w-3xl mx-auto p-5">
+                        <h1 class="text-4xl font-mono text-primary hidden">About Me</h1>
+                        <div
+                                set:html={photographer.AboutMe}
+                                class="prose prose-lg max-w-3xl mx-auto p-5"
+                        />
+                    </div>
+                </div>
+            </div>
+        </>
+    }
+</Layout>

@@ -5,7 +5,7 @@ import {retrieveMain} from "../../lib/strapi";
 const {site, photographer} = await retrieveMain();
 ---
 
-<Layout photographer={photographer} site={site}>
+<Layout site={site} photographer={photographer}>
     <div class=" font-mono xl drop-shadow-xl w-full flex items-stretch px-5 xl:px-5 py-5">
         <div class="flex justify-center items-center w-full h-full px-5 ">
             <div>

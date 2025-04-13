@@ -8,7 +8,7 @@ const {site, photographer} = await retrieveMain();
 const gallery_ = await retrieveGallery(gallerySlug);
 ---
 
-<Layout title="Portfolio" photographer={photographer} site={site}>
+<Layout site={site} photographer={photographer}>
 
     {!gallery_ &&
             <div class="text-center text-2xl font-bold">Gallery not found
@@ -25,5 +25,5 @@ const gallery_ = await retrieveGallery(gallerySlug);
             </div>
     }
     {gallery_ &&
-            <Gallery pictures={gallery_.Pictures} style={gallery_.Style} site={site}/>}
+            <Gallery gallery={gallery_} style={gallery_.Style} site={site}/>}
 </Layout>

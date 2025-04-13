@@ -1,16 +1,20 @@
 ---
-import type Photographer from '../interfaces/Photographer';
-
-const {photographer}: { photographer: Photographer } = Astro.props as {
+import type Site from "../interfaces/Site";
+import type Photographer from "../interfaces/Photographer";
+const {site, photographer}: { site: Site, photographer: Photographer } = Astro.props as {
+    site: Site,
     photographer: Photographer
+
 };
+const leftSide = site.Footer.LeftSide.replaceAll("{year}", String(new Date().getFullYear()));
+const antibotEmail = photographer.Email?.replaceAll("@", "[at]");
 ---
 <footer class="footer footer-horizontal pb-5 flex justify-between items-center px-5">
     <div class="flex-shrink-0">
-        <p>© {new Date().getFullYear()}</p>
+        <p>{leftSide}</p>
     </div>
     <div class="flex gap-2">
-        {photographer.Instagram &&
+        {site.Footer.ShowInstagram && photographer.Instagram &&
                 <a href={`https://instagram.com/${photographer.Instagram.replace("@", "")}`} target="_blank"
                    class="link link-hover" aria-label="Instagram">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -19,7 +23,30 @@ const {photographer}: { photographer: Photographer } = Astro.props as {
                     </svg>
                 </a>
         }
-        {photographer.PhoneNumber &&
+        {photographer.Email && site.Footer.ShowEmail &&
+                <>
+                    <script is:inline>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const emailLink = document.getElementById("email__link");
+                            const email = emailLink?.getAttribute("href").replace("mailto:", "").replace("[at]", "@");
+                            if (emailLink) {
+                                emailLink.setAttribute("href", "mailto:" + email);
+                            }
+                        });
+                    </script>
+                    <a href={`mailto:${antibotEmail}`} rel="noopener noreferrer"
+                       id="email__link"
+                       class="link link-hover" aria-label="email">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                             fill="currentColor">
+                            <text xmlns="http://www.w3.org/2000/svg" x="0" y="18" font-size="24px"
+                                  style="font-size:24px;font-family:Arial,sans-serif;">@
+                            </text>
+                        </svg>
+                    </a>
+                </>
+        }
+        {photographer.PhoneNumber && site.Footer.ShowPhoneNumber &&
                 <a href="javascript:void(0)"
                    onclick={`window.location.href='tel:'+'${photographer.PhoneNumber}'.replace(/\\s/g,'')`}
                    class="link link-hover" aria-label="Téléphone">

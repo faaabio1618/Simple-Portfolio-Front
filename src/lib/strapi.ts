@@ -1,7 +1,7 @@
-import pkg from '@apollo/client';
+import pkg, {type ApolloClientOptions} from '@apollo/client';
 import type Portfolio from "../interfaces/Portfolio.ts";
 import type Photographer from "../interfaces/Photographer.ts";
-import type {Gallery, GalleryStyle} from "../interfaces/Gallery.ts";
+import type {Gallery} from "../interfaces/Gallery.ts";
 import type Site from "../interfaces/Site.ts";
 
 const {ApolloClient, gql, InMemoryCache} = pkg;
@@ -58,43 +58,110 @@ export default async function fetchApi<T>({
 
 }
 
-const client = new ApolloClient({
+let options = {
     uri: `${import.meta.env.STRAPI_URL}/graphql`,
-    cache: new InMemoryCache(),
-});
+} as ApolloClientOptions<unknown>;
 
-async function retrieveSite(): Promise<Site> {
-    return await fetchApi({
-        endpoint: '/site?populate=*',
-        wrappedByKey: "data",
-    }) as Site;
+if (import.meta.env.DEV) {
+    options = {
+        ...options,
+        cache: new InMemoryCache({
+            typePolicies: {
+                Query: {
+                    fields: {
+                        site: {
+                            merge(existing, incoming) {
+                                return incoming;
+                            },
+                        },
+                    },
+                },
+            },
+        }),
+    }
+} else {
+    options = {
+        ...options,
+        cache: new InMemoryCache(),
+    };
 }
+const client = new ApolloClient(options);
 
-async function retrievePhotographer(): Promise<Photographer> {
-    return await fetchApi({
-        endpoint: '/photographer?populate=*',
-        wrappedByKey: "data",
-    }) as Photographer;
-}
 
 export async function retrieveMain(): Promise<{ site: Site, photographer: Photographer }> {
-    /*
-    TODO graphql
-        query Main{
-          photographer {
-            documentId
-          }
-          site {
-            documentId
-          }
-          header {
-            documentId
-          }
+    const query = gql`
+        query site {
+            photographer {
+                AboutMe
+                documentId
+                Email
+                Instagram
+                Name
+                Surname
+                PhoneNumber
+            }
+            site {
+                Name
+                PhotographerName
+                Home {
+                    Cover {
+                        alternativeText
+                        width
+                        mime
+                        height
+                        url
+                        previewUrl
+                        caption
+                        formats
+                    }
+                    ShowAboutMe
+                    ShowInstagram
+                }
+                DefaultGalleryStyle {
+                    NrColumns
+                    MainStyle
+                    Name
+                    NrColumns
+                    documentId
+                    ShowNextGallery
+                    ShowTitles
+                }
+                Menu {
+                    Links {
+                        Page
+                        Label
+                    }
+                    MainPortfolio {
+                        documentId
+                    }
+                    BackgroundColor
+                    TextColor
+                }
+                Footer {
+                    LeftSide
+                    ShowEmail
+                    ShowPhoneNumber
+                    ShowInstagram
+                }
+            }
         }
-     */
-    const site = await retrieveSite();
-    const photographer = await retrievePhotographer();
-    return {site, photographer};
+    `;
+    const variables = {};
+    try {
+        const res = await client.query({
+            query,
+            variables,
+        });
+        console.log(JSON.stringify(res, null, 2));
+
+        return {
+            site: res.data.site,
+            photographer: res.data.photographer,
+        }
+    } catch (error) {
+        console.error("Error fetching site:", error);
+        throw error;
+    }
 }
 
 export async function retrieveGallery(slug: string | undefined): Promise<Gallery | null> {
@@ -105,6 +172,7 @@ export async function retrieveGallery(slug: string | undefined): Promise<Gallery
         endpoint: `/galleries?filters[Slug][$eq]=${slug}&populate=*`,
         wrappedByKey: "data",
     });
+    console.log(JSON.stringify(galleries, null, 2));
     return galleries && galleries.length > 0 ? galleries[0] : null;
 }
 

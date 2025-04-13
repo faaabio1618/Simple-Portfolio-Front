@@ -8,11 +8,7 @@ export interface Gallery extends StrapiInterface {
     Cover: Image;
     Slug: string;
     Style: GalleryStyle;
-    see_also: {
-        url: string;
-        title: string;
-        cover: Image;
-    }[];
+    see_also: Gallery[];
 }
 
 

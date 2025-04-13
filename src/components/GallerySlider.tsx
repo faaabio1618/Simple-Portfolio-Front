@@ -1,8 +1,7 @@
 import * as React from "react";
 import "react-image-gallery/styles/css/image-gallery.css";
 import ImageGallery from "react-image-gallery";
-
-import type {Image} from "../interfaces/Gallery.ts";
+import type {Gallery} from "../interfaces/Gallery.ts";
 
 const leftNav = (
     onClick: React.MouseEventHandler<HTMLElement>,
@@ -22,8 +21,8 @@ const leftNav = (
             </svg>
         </button>);
 };
-const GallerySlider = ({items}: { items: Image[] }) => {
-    const images = items.map((item) => ({
+const GallerySlider = ({gallery}: { gallery: Gallery }) => {
+    const images = gallery.Pictures.map((item) => ({
         original: item.url,
         thumbnail: item.url,
         description: item.alternativeText,
