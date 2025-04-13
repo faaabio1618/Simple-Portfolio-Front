@@ -127,7 +127,7 @@ export async function retrieveMain(): Promise<{ site: Site, photographer: Photog
                     ShowTitles
                 }
                 Menu {
-                    Links {
+                    Entry {
                         Page
                         Label
                     }

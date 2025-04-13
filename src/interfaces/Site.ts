@@ -13,7 +13,7 @@ export default interface Site extends StrapiInterface {
     DefaultGalleryStyle: GalleryStyle;
     HeaderColor: string;
     Menu: {
-        Links: Link[];
+        Entry: Link[];
         MainPortfolio: Portfolio;
         BackgroundColor: string;
         TextColor: string;
