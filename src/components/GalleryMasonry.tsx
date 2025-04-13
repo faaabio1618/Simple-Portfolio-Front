@@ -39,28 +39,30 @@ const GalleryMasonry = ({gallery, style}: { gallery: Gallery, style: GalleryStyl
     }
 
     return (
-        <div className={className}>
-            {gallery.Pictures.map((image, index) => (
-                <div key={index} className="break-inside-avoid w-full inline-block mb-6">
-                    <img
-                        src={image.url}
-                        alt={image.alternativeText || ""}
-                        className="w-full h-auto object-contain mt-2"
-                        loading="lazy"
-                    />
-                    {showTitles && (image.caption || image.alternativeText) && (
-                        <div className="text-md font-bold py-1">{image.caption || image.alternativeText}</div>
-                    )}
-                </div>
-            ))}
-{showNextGallery && gallery.see_also[0] && (
-    <div className="column-span-all text-md font-bold py-1 text-center" style={{columnSpan: 'all'}}>
-        <a href={`/portfolio/${gallery.see_also[0].Slug}`} className="link">
-            See next gallery: {gallery.see_also[0].Title}
-        </a>
-    </div>
-)}
-        </div>
+        <>
+            <div className={className}>
+                {gallery.Pictures.map((image, index) => (
+                    <div key={index} className="break-inside-avoid w-full inline-block mb-6">
+                        <img
+                            src={image.url}
+                            alt={image.alternativeText || ""}
+                            className="w-full h-auto object-contain mt-2"
+                            loading="lazy"
+                        />
+                        {showTitles && (image.caption || image.alternativeText) && (
+                            <div className="text-md font-bold py-1">{image.caption || image.alternativeText}</div>
+                        )}
+                    </div>
+                ))}
+                {showNextGallery && gallery.see_also[0] && (
+                    <div className="column-span-all text-md font-bold py-1 text-center" style={{columnSpan: 'all'}}>
+                        <a href={`/portfolio/${gallery.see_also[0].Slug}`} className="link">
+                            See next gallery: {gallery.see_also[0].Title}
+                        </a>
+                    </div>
+                )}
+            </div>
+        </>
     );
 };
 

@@ -1,12 +1,15 @@
 ---
 import '../styles/global.css';
-
+import '@ckeditor/ckeditor5-basic-styles/theme/code.css';
+import '@ckeditor/ckeditor5-image/dist/index-content.css';
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import type Site from "../interfaces/Site";
 import type Photographer from "../interfaces/Photographer";
-const {site, photographer} = Astro.props as {
+const {site, photographer, subtitle, title} = Astro.props as {
     site: Site,
+    title?: string,
+    subtitle?: string,
     photographer: Photographer
 }
 const pageTitle = site.Name;
@@ -29,7 +32,7 @@ const pageTitle = site.Name;
     <script async src="//www.instagram.com/embed.js"/>
 </head>
 <body class="font-sans flex flex-col min-h-screen">
-<Header site={site}/>
+<Header site={site} title={title} subtitle={subtitle} />
 <main class="flex-grow">
     <slot/>
 </main>

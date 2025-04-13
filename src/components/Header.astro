@@ -1,17 +1,19 @@
 ---
 import type Site from "../interfaces/Site";
 
-const {site}: { site: Site } = Astro.props as {
-    site: Site
+const {site, title, subtitle}: { site: Site, title?: string, subtitle?: string } = Astro.props as {
+    site: Site,
+    title?: string,
+    subtitle?: string
 };
 const currentPath = new URL(Astro.request.url).pathname;
 const links = site.Menu.Entry
 ---
 
-<header class="navbar bg-base-100 shadow-sm sticky top-0 z-50 py-6 px-5 max-h-16">
+<header class="navbar bg-base-100 shadow-sm sticky top-0 w-full z-50 py-6 lg:px-5 max-h-16">
     <div class="navbar-start">
         <div class="dropdown">
-            <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+            <div tabindex="0" role="button" class="btn btn-ghost lg:hidden pl-0">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                      stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/>
@@ -34,8 +36,17 @@ const links = site.Menu.Entry
                 })}
             </ul>
         </div>
-        <a class="text-2xl font-mono" href="/">{site.Name}</a>
+        <a class="text-2xl font-mono whitespace-nowrap" href="/">{site.Name}</a>
     </div>
+
+    {
+        title &&
+            <div class="navbar-center hidden lg:flex flex-col">
+                <h1 class="text-2xl font-bold uppercase">{title}</h1>
+                {subtitle && <p class="text-sm">{subtitle}</p>}
+            </div>
+    }
+
     <div class="navbar-end hidden lg:flex font-mono">
         <ul class="menu menu-horizontal px-1">
             {links.map((link, index) => {

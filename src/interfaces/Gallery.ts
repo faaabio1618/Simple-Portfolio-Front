@@ -2,7 +2,6 @@ import type StrapiInterface from "./Strapi.ts";
 
 export interface Gallery extends StrapiInterface {
     Title: string;
-    Description: string;
     Date: Date;
     Pictures: Image[];
     Cover: Image;

@@ -1,4 +1,5 @@
 ---
+import About from '../components/About.astro';
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import {retrieveMain} from "../lib/strapi";
@@ -33,17 +34,7 @@ const isCoverVideoWithPoster = coverVideo && coverImage;
     )}
     <div class="flex flex-col justify-center w-full lg:max-w-[80%] max-w-[90%] mx-auto mt-[5%] lg:mt-[5%]">
         {site.Home.ShowAboutMe &&
-                <div class="w-full h-auto relative">
-                    <div class="w-full h-auto relative">
-                        <div class="prose prose-lg mx-auto">
-                            <h1 class="text-4xl font-mono text-primary hidden">About Me</h1>
-                            <div
-                                    set:html={photographer.AboutMe}
-                                    class="prose prose-lg mx-auto"
-                            />
-                        </div>
-                    </div>
-                </div>
+                <About photographer={photographer}/>
         }
         {site.Home.ShowInstagram &&
                 <div class="w-full h-auto relative">

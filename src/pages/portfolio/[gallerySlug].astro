@@ -6,9 +6,16 @@ import Layout from '../../layouts/Layout.astro';
 import {retrieveMain, retrieveGallery} from "../../lib/strapi";
 const {site, photographer} = await retrieveMain();
 const gallery_ = await retrieveGallery(gallerySlug);
+let title = gallery_?.Title;
+let subtitle = undefined;
+if (gallery_?.Date) {
+    const date = new Date(gallery_.Date);
+    const options = {year: 'numeric', month: 'long', day: 'numeric'};
+    subtitle = `${date.toLocaleDateString('en-US', options)}`;
+}
 ---
 
-<Layout site={site} photographer={photographer}>
+<Layout site={site} photographer={photographer} title={title} subtitle={subtitle}>
 
     {!gallery_ &&
             <div class="text-center text-2xl font-bold">Gallery not found

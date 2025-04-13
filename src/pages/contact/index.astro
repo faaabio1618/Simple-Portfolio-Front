@@ -5,11 +5,10 @@ import {retrieveMain } from "../../lib/strapi";
 const {site, photographer} = await retrieveMain();
 ---
 
-<Layout site={site} photographer={photographer}>
+<Layout site={site} photographer={photographer} title="Contact Me">
     <div class="font-mono xl drop-shadow-xl w-full flex items-stretch px-5 xl:px-5 py-5">
         <div class="flex justify-center items-center w-full h-full px-5 ">
             <div>
-                <h1 class="text-4xl font-mono text-primary">Contact me</h1>
                 <div class="w-full mt-5 sm:mt-8">
                     <form name="contact" method="POST" data-netlify="true"
                           data-netlify-recaptcha="true"

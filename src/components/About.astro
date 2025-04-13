@@ -1,0 +1,14 @@
+---
+const {photographer} = Astro.props;
+---
+<div class="w-full h-auto relative">
+    <div class="w-full h-auto relative">
+        <div class="prose prose-lg mx-auto">
+            <h1 class="text-4xl font-mono text-primary hidden">About Me</h1>
+            <div
+                    set:html={photographer.AboutMe}
+                    class="prose prose-lg mx-auto ck-content"
+            />
+        </div>
+    </div>
+</div>
