@@ -12,36 +12,36 @@ const links = site.Menu.Entry
 
 <header class="navbar bg-base-100 shadow-sm sticky top-0 w-full z-50 py-6 lg:px-5 max-h-16">
     <div class="navbar-start">
-        <div class="dropdown">
-            <div tabindex="0" role="button" class="btn btn-ghost lg:hidden pl-0">
+        <div class="dropdown relative">
+            <div tabindex="0" role="button" class="btn btn-ghost lg:hidden pl-0 ml-0">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                      stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/>
                 </svg>
             </div>
             <ul tabindex="0"
-                class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                class="menu menu-sm dropdown-content bg-base-100 rounded-tr-box rounded-b-box z-1 mt-0 w-52 p-2 shadow absolute -left-2 top-full rounded-tl-none">
                 {links.map(link => {
                     const absoluteLink = ("/" + link.Page).replace(/\/+/g, '/');
                     if (absoluteLink.replace(/\/$/, '') === currentPath.replace(/\/$/, '')) {
                         return (
-                                <li class="text-lg link-hover" id={`link__${link.id}`}><a href="#">{link.Label}</a></li>
+                                <li class="text-lg link-hover opacity-0" id={`link__${link.id}`}><a href="#">{link.Label}</a></li>
                         )
                     } else {
                         return (
-                                <li class="text-lg link-hover" id={`link_${link.id}`}><a
+                                <li class="text-lg link-hover opacity-0" id={`link_${link.id}`}><a
                                         href={absoluteLink}>{link.Label}</a></li>
                         );
                     }
                 })}
             </ul>
         </div>
-        <a class="text-2xl font-mono whitespace-nowrap" id="site-name" href="/">{site.Name}</a>
+        <a class="text-2xl font-mono whitespace-nowrap opacity-0" id="site-name" href="/">{site.Name}</a>
     </div>
 
     {
         title &&
-            <div class="navbar-center hidden lg:flex flex-col" id="title-container">
+            <div class="navbar-center hidden lg:flex flex-col opacity-0" id="title-container">
                 <h1 class="text-2xl font-bold uppercase">{title}</h1>
                 {subtitle && <p class="text-sm">{subtitle}</p>}
             </div>
@@ -55,12 +55,12 @@ const links = site.Menu.Entry
                     const absoluteLink = ("/" + link.Page).replace(/\/+/g, '/');
                     if (absoluteLink.replace(/\/$/, '') === currentPath.replace(/\/$/, '')) {
                         res =
-                                <li class="text-lg link-hover" id={`__l_${link.id}`}>
+                                <li class="text-lg link-hover opacity-0" id={`__l_${link.id}`}>
                                     <a href="#">{link.Label}</a>
                                 </li>;
                     } else {
                         res =
-                                <li class="text-lg link-hover" id={`_l_${link.id}`}>
+                                <li class="text-lg link-hover opacity-0" id={`_l_${link.id}`}>
                                     <a href={absoluteLink}>{link.Label}</a>
                                 </li>;
                     }
@@ -79,13 +79,13 @@ const links = site.Menu.Entry
                         const absoluteLink = ("/" + lastLink.Page).replace(/\/+/g, '/');
                         if (absoluteLink.replace(/\/$/, '') === currentPath.replace(/\/$/, '')) {
                             return (
-                                    <div class="text-lg link-hover" id={`__l_${lastLink.id}`}>
+                                    <div class="text-lg link-hover opacity-0" id={`__l_${lastLink.id}`}>
                                         <a href="#">{lastLink.Label}</a>
                                     </div>
                             );
                         } else {
                             return (
-                                    <div class="text-lg link-hover" id={`_l_${lastLink.id}`}>
+                                    <div class="text-lg link-hover opacity-0" id={`_l_${lastLink.id}`}>
                                         <a href={absoluteLink}>{lastLink.Label}</a>
                                     </div>
                             );
@@ -102,29 +102,42 @@ const links = site.Menu.Entry
     // Wait for the DOM to be fully loaded
     document.addEventListener('DOMContentLoaded', () => {
         // Set initial states
-        gsap.set("#site-name", {opacity: 0});
+        gsap.set("#site-name", {opacity: 0, x: -50});
         gsap.set("#title-container", {opacity: 0});
         gsap.set("li[id^='_l_'], li[id^='__l_'], li[id^='link_'], li[id^='link__'], div[id^='_l_'], div[id^='__l_']", {
             opacity: 0,
             y: 20
         });
 
-        // Simple fade in for site name
+        // Mobile menu button animation
+        const menuButton = document.querySelector('.btn-ghost.lg\\:hidden');
+        if (menuButton) {
+            gsap.from(menuButton, {
+                scale: 0,
+                rotation: 180,
+                duration: 0.8,
+                ease: "back.out(1.7)"
+            });
+        }
+
+        // Site name animation (slide in from left)
         gsap.to("#site-name", {
             opacity: 1,
-            duration: 0.5,
+            x: 0,
+            duration: 0.8,
             ease: "power2.out"
         });
 
-        // Simple fade in for title
+        // Desktop title animation
         gsap.to("#title-container", {
             opacity: 1,
             duration: 0.5,
             ease: "power2.out"
         });
 
-        const menuItems = document.querySelectorAll("li[id^='_l_'], li[id^='__l_'], li[id^='link_'], li[id^='link__'], div[id^='_l_'], div[id^='__l_']");
-        gsap.to(menuItems, {
+        // Mobile menu items animation
+        const mobileMenuItems = document.querySelectorAll("li[id^='link_'], li[id^='link__']");
+        gsap.to(mobileMenuItems, {
             opacity: 1,
             y: 0,
             duration: 0.5,
@@ -132,8 +145,19 @@ const links = site.Menu.Entry
             ease: "power2.out"
         });
 
-        // Hover animation for menu items
-        menuItems.forEach(item => {
+        // Desktop menu items animation
+        const desktopMenuItems = document.querySelectorAll("li[id^='_l_'], li[id^='__l_'], div[id^='_l_'], div[id^='__l_']");
+        gsap.to(desktopMenuItems, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.1,
+            ease: "power2.out"
+        });
+
+        // Hover animation for all menu items
+        const allMenuItems = document.querySelectorAll("li[id^='_l_'], li[id^='__l_'], li[id^='link_'], li[id^='link__'], div[id^='_l_'], div[id^='__l_']");
+        allMenuItems.forEach(item => {
             item.addEventListener("mouseenter", () => {
                 gsap.to(item, {
                     scale: 1.05,
@@ -150,5 +174,20 @@ const links = site.Menu.Entry
                 });
             });
         });
+
+        // Mobile menu dropdown animation
+        const dropdown = document.querySelector('.dropdown');
+        if (dropdown) {
+            dropdown.addEventListener('click', () => {
+                const menuItems = document.querySelectorAll("li[id^='link_'], li[id^='link__']");
+                gsap.from(menuItems, {
+                    opacity: 0,
+                    x: -20,
+                    duration: 0.3,
+                    stagger: 0.1,
+                    ease: "power2.out"
+                });
+            });
+        }
     });
 </script>
