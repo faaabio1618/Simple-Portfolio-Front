@@ -1,7 +1,7 @@
 ---
 export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
-import {retrieveMain } from "../../lib/strapi";
+import {retrieveMain} from "../../lib/strapi";
 const {site, photographer} = await retrieveMain();
 ---
 
@@ -69,6 +69,65 @@ const {site, photographer} = await retrieveMain();
 
         </div>
     </div>
+    {(photographer.Instagram &&
+            <div class="chat chat-end chat-bubble-container opacity-0 transition-opacity duration-500 ease-in-out">
+                <div class="chat-bubble chat-bubble-info">
+                    You can also DM me on Instagram
+                    <br/>
+                    <a target="_blank" href={`https://www.instagram.com/${photographer.Instagram.replace("@", "")}`}
+                       class="link link-primary">
+                        {photographer.Instagram}
+                    </a>
+                </div>
+            </div>)}
+    {(photographer.Email &&
+            <div class="chat chat-end chat-bubble-container opacity-0 transition-opacity duration-500 ease-in-out">
+                <div class="chat-bubble chat-bubble-info">
+                    Or send me an email at
+                    <br/>
+                    <span id="email-placeholder" class="link link-primary"
+                          data-p1={photographer.Email.split('@')[0]}
+                          data-p2={photographer.Email.split('@')[1]}>[Email redacted]</span>
+                </div>
+            </div>)}
+    {(photographer.PhoneNumber &&
+            <div class="chat chat-end chat-bubble-container opacity-0 transition-opacity duration-500 ease-in-out">
+                <div class="chat-bubble chat-bubble-info">
+                    Or call me at
+                    <br/>
+                    <span id="phone-placeholder" class="link link-primary"
+                          data-p1={photographer.PhoneNumber.slice(0, 3)}
+                          data-p2={photographer.PhoneNumber.slice(3)}>[Phone Number redacted]</span>
+                </div>
+            </div>)}
 </Layout>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const chatBubbles = document.querySelectorAll('.chat-bubble-container');
+        const delay = 1500; // 1,5 secondes entre chaque bulle
+
+        chatBubbles.forEach((bubble, index) => {
+            setTimeout(() => {
+                bubble.classList.remove('opacity-0');
+                bubble.classList.add('opacity-100');
+            }, delay * (index + 1));
+        });
+
+        const emailPlaceholder = document.getElementById('email-placeholder');
+        if (emailPlaceholder) {
+            const emailPart1 = emailPlaceholder.getAttribute('data-p1');
+            const emailPart2 = emailPlaceholder.getAttribute('data-p2');
+            emailPlaceholder.innerHTML = `<a href="mailto:${emailPart1}@${emailPart2}" class="link link-primary">${emailPart1}@${emailPart2}</a>`;
+        }
+
+        const phonePlaceholder = document.getElementById('phone-placeholder');
+        if (phonePlaceholder) {
+            const phonePart1 = phonePlaceholder.getAttribute('data-p1');
+            const phonePart2 = phonePlaceholder.getAttribute('data-p2');
+            phonePlaceholder.innerHTML = `<a href="tel:${phonePart1}${phonePart2}" class="link link-primary">${phonePart1}${phonePart2}</a>`;
+        }
+    });
+</script>
 
 
