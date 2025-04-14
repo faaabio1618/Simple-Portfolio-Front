@@ -11,7 +11,7 @@ const isCoverVideoWithPoster = coverVideo && coverImage;
 
 <Layout site={site} photographer={photographer}>
     {!coverVideo && coverImage && (
-            <div class="w-full h-[50vh] relative">
+            <div class="w-full h-[50vh] relative ">
                 <img
                         src={coverImage.url}
                         alt={coverImage.alternativeText || site.Name}

@@ -36,12 +36,12 @@ const links = site.Menu.Entry
                 })}
             </ul>
         </div>
-        <a class="text-2xl font-mono whitespace-nowrap" href="/">{site.Name}</a>
+        <a class="text-2xl font-mono whitespace-nowrap" id="site-name" href="/">{site.Name}</a>
     </div>
 
     {
         title &&
-            <div class="navbar-center hidden lg:flex flex-col">
+            <div class="navbar-center hidden lg:flex flex-col" id="title-container">
                 <h1 class="text-2xl font-bold uppercase">{title}</h1>
                 {subtitle && <p class="text-sm">{subtitle}</p>}
             </div>
@@ -95,3 +95,60 @@ const links = site.Menu.Entry
         )}
     </div>
 </header>
+
+<script>
+    import {gsap} from 'gsap';
+
+    // Wait for the DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        // Set initial states
+        gsap.set("#site-name", {opacity: 0});
+        gsap.set("#title-container", {opacity: 0});
+        gsap.set("li[id^='_l_'], li[id^='__l_'], li[id^='link_'], li[id^='link__'], div[id^='_l_'], div[id^='__l_']", {
+            opacity: 0,
+            y: 20
+        });
+
+        // Simple fade in for site name
+        gsap.to("#site-name", {
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.out"
+        });
+
+        // Simple fade in for title
+        gsap.to("#title-container", {
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.out"
+        });
+
+        const menuItems = document.querySelectorAll("li[id^='_l_'], li[id^='__l_'], li[id^='link_'], li[id^='link__'], div[id^='_l_'], div[id^='__l_']");
+        gsap.to(menuItems, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.1,
+            ease: "power2.out"
+        });
+
+        // Hover animation for menu items
+        menuItems.forEach(item => {
+            item.addEventListener("mouseenter", () => {
+                gsap.to(item, {
+                    scale: 1.05,
+                    duration: 0.2,
+                    ease: "power2.out"
+                });
+            });
+
+            item.addEventListener("mouseleave", () => {
+                gsap.to(item, {
+                    scale: 1,
+                    duration: 0.2,
+                    ease: "power2.out"
+                });
+            });
+        });
+    });
+</script>

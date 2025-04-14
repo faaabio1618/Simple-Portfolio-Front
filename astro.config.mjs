@@ -13,12 +13,18 @@ const netlifyConfiguration = {};
 // https://astro.build/config
 
 export default defineConfig({
-  site: 'https://photodemo.filippi.dev',
-  integrations: [react(), sitemap()],
-  output: "server",
-  adapter: netlify(netlifyConfiguration),
+    site: 'https://photodemo.filippi.dev',
+    image: {
+        remotePatterns: [{
+            protocol: "https",
+            hostname: "**.amazonaws.com",
+        }],
+    },
+    integrations: [react(), sitemap()],
+    output: "server",
+    adapter: netlify(netlifyConfiguration),
 
-  vite: {
-    plugins: [tailwindcss()]
-  }
+    vite: {
+        plugins: [tailwindcss()]
+    }
 });

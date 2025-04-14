@@ -152,7 +152,7 @@ export async function retrieveMain(): Promise<{ site: Site, photographer: Photog
             query,
             variables,
         });
-        console.log(JSON.stringify(res, null, 2));
+        // console.log(JSON.stringify(res, null, 2));
 
         return {
             site: res.data.site,
@@ -172,7 +172,7 @@ export async function retrieveGallery(slug: string | undefined): Promise<Gallery
         endpoint: `/galleries?filters[Slug][$eq]=${slug}&populate=*`,
         wrappedByKey: "data",
     });
-    console.log(JSON.stringify(galleries, null, 2));
+    // console.log(JSON.stringify(galleries, null, 2));
     return galleries && galleries.length > 0 ? galleries[0] : null;
 }
 

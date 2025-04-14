@@ -1,7 +1,18 @@
 ---
 import Gallery from "../../components/Gallery.astro";
+//for demo only
+export const prerender = true;
+export function getStaticPaths() {
+    return [
+        {params: {gallerySlug: "redTouch"}},
+        {params: {gallerySlug: "cupi"}},
+        {params: {gallerySlug: "religion"}},
+        {params: {gallerySlug: "chillin"}},
+        {params: {gallerySlug: "mediz"}},
+    ];
+}
+
 const {gallerySlug} = Astro.params;
-export const prerender = false;
 import Layout from '../../layouts/Layout.astro';
 import {retrieveMain, retrieveGallery} from "../../lib/strapi";
 const {site, photographer} = await retrieveMain();

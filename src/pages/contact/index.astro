@@ -3,16 +3,27 @@ export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
 import {retrieveMain} from "../../lib/strapi";
 const {site, photographer} = await retrieveMain();
+
+// Count available contact methods
+const contactMethods = [
+    photographer.Instagram,
+    photographer.Email,
+    photographer.PhoneNumber
+].filter(Boolean).length;
+
+// Determine grid columns based on contact methods
+const gridCols = contactMethods === 1 ? 'grid-cols-1' :
+    contactMethods === 2 ? 'grid-cols-1 sm:grid-cols-2' :
+        'grid-cols-1 sm:grid-cols-2 md:grid-cols-3';
 ---
 
 <Layout site={site} photographer={photographer} title="Contact Me">
     <div class="font-mono xl drop-shadow-xl w-full flex items-stretch px-5 xl:px-5 py-5">
-        <div class="flex justify-center items-center w-full h-full px-5 ">
+        <div class="flex justify-center items-center w-full h-full px-5">
             <div>
                 <div class="w-full mt-5 sm:mt-8">
                     <form name="contact" method="POST" data-netlify="true"
                           data-netlify-recaptcha="true"
-                          netifly
                           action="/contact/success"
                           class="mx-auto w-full sm:max-w-md md:max-w-lg flex flex-col gap-5">
                         <div class="flex flex-col">
@@ -59,73 +70,90 @@ const {site, photographer} = await retrieveMain();
                         </label>
                         <div data-netlify-recaptcha="true"></div>
                         <div class="flex flex-col md:flex-row gap-2 md:gap-4 justify-center items-center">
-                            <button class="btn btn-active btn-primary btn-block " type="submit">
+                            <button class="btn btn-active btn-primary btn-block" type="submit">
                                 Send
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
-    {(photographer.Instagram &&
-            <div class="chat chat-end chat-bubble-container opacity-0 transition-opacity duration-500 ease-in-out">
-                <div class="chat-bubble chat-bubble-info">
-                    You can also DM me on Instagram
-                    <br/>
-                    <a target="_blank" href={`https://www.instagram.com/${photographer.Instagram.replace("@", "")}`}
-                       class="link link-primary">
-                        {photographer.Instagram}
-                    </a>
+
+    <div class="divider">OR</div>
+
+    <div class={`grid ${gridCols} gap-4 px-5 pb-8 max-w-5xl mx-auto`}>
+        {photographer.Instagram && (
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title">Instagram</h2>
+                        <p>Connect with me on Instagram</p>
+                        <div class="card-actions justify-end">
+                            <a href={`https://www.instagram.com/${photographer.Instagram.replace("@", "")}`}
+                               target="_blank"
+                               class="btn btn-primary">
+                                {photographer.Instagram}
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </div>)}
-    {(photographer.Email &&
-            <div class="chat chat-end chat-bubble-container opacity-0 transition-opacity duration-500 ease-in-out">
-                <div class="chat-bubble chat-bubble-info">
-                    Or send me an email at
-                    <br/>
-                    <span id="email-placeholder" class="link link-primary"
-                          data-p1={photographer.Email.split('@')[0]}
-                          data-p2={photographer.Email.split('@')[1]}>[Email redacted]</span>
+        )}
+
+        {photographer.Email && (
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title">Email</h2>
+                        <p>Send me an email directly</p>
+                        <div class="card-actions justify-end">
+                        <span id="email-placeholder" class="btn btn-primary"
+                              data-p1={photographer.Email.split('@')[0]}
+                              data-p2={photographer.Email.split('@')[1]}>
+                            [Email redacted]
+                        </span>
+                        </div>
+                    </div>
                 </div>
-            </div>)}
-    {(photographer.PhoneNumber &&
-            <div class="chat chat-end chat-bubble-container opacity-0 transition-opacity duration-500 ease-in-out">
-                <div class="chat-bubble chat-bubble-info">
-                    Or call me at
-                    <br/>
-                    <span id="phone-placeholder" class="link link-primary"
-                          data-p1={photographer.PhoneNumber.slice(0, 3)}
-                          data-p2={photographer.PhoneNumber.slice(3)}>[Phone Number redacted]</span>
+        )}
+
+        {photographer.PhoneNumber && (
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title">Phone</h2>
+                        <p>Send me a message</p>
+                        <div class="card-actions justify-end">
+                        <span id="phone-placeholder" class="btn btn-primary"
+                              data-p1={photographer.PhoneNumber.slice(0, 3)}
+                              data-p2={photographer.PhoneNumber.slice(3)}>
+                            [Phone Number redacted]
+                        </span>
+                        </div>
+                    </div>
                 </div>
-            </div>)}
+        )}
+    </div>
 </Layout>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const chatBubbles = document.querySelectorAll('.chat-bubble-container');
-        const delay = 1500; // 1,5 secondes entre chaque bulle
-
-        chatBubbles.forEach((bubble, index) => {
-            setTimeout(() => {
-                bubble.classList.remove('opacity-0');
-                bubble.classList.add('opacity-100');
-            }, delay * (index + 1));
-        });
-
         const emailPlaceholder = document.getElementById('email-placeholder');
         if (emailPlaceholder) {
             const emailPart1 = emailPlaceholder.getAttribute('data-p1');
             const emailPart2 = emailPlaceholder.getAttribute('data-p2');
-            emailPlaceholder.innerHTML = `<a href="mailto:${emailPart1}@${emailPart2}" class="link link-primary">${emailPart1}@${emailPart2}</a>`;
+            emailPlaceholder.innerHTML = `${emailPart1}@${emailPart2}`;
+            emailPlaceholder.addEventListener('click', () => {
+                window.location.href = `mailto:${emailPart1}@${emailPart2}`;
+            });
         }
 
         const phonePlaceholder = document.getElementById('phone-placeholder');
         if (phonePlaceholder) {
             const phonePart1 = phonePlaceholder.getAttribute('data-p1');
             const phonePart2 = phonePlaceholder.getAttribute('data-p2');
-            phonePlaceholder.innerHTML = `<a href="tel:${phonePart1}${phonePart2}" class="link link-primary">${phonePart1}${phonePart2}</a>`;
+            phonePlaceholder.innerHTML = `${phonePart1}${phonePart2}`;
+            phonePlaceholder.addEventListener('click', () => {
+                const phoneNumber = `${phonePart1}${phonePart2}`.replace(/\D/g, '');
+                window.location.href = `https://wa.me/${phoneNumber}`;
+            });
         }
     });
 </script>

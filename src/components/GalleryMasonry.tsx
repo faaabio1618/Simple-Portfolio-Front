@@ -1,10 +1,10 @@
 import * as React from "react";
+import {useEffect} from "react";
 import type {Gallery, GalleryStyle} from "../interfaces/Gallery.ts";
 import {gsap} from "gsap";
 import {ScrollTrigger} from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger)
-import {useEffect} from "react";
 
 
 const GalleryMasonry = ({gallery, style}: { gallery: Gallery, style: GalleryStyle }) => {
