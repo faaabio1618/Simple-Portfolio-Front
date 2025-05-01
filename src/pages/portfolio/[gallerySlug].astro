@@ -4,7 +4,7 @@ import Gallery from "../../components/Gallery.astro";
 export const prerender = true;
 export function getStaticPaths() {
     return [
-        {params: {gallerySlug: "redTouch"}},
+        {params: {gallerySlug: "redtouch"}},
         {params: {gallerySlug: "cupi"}},
         {params: {gallerySlug: "religion"}},
         {params: {gallerySlug: "chillin"}},
@@ -26,10 +26,10 @@ if (gallery_?.Date) {
 }
 ---
 
-<Layout site={site} photographer={photographer} title={title} subtitle={subtitle}>
+<Layout site={site} photographer={photographer} title={title ?? 'Gallery not found'} subtitle={subtitle}>
 
     {!gallery_ &&
-            <div class="text-center text-2xl font-bold">Gallery not found
+            <div class="text-center text-2xl font-bold">
                 <figure class="relative w-full h-auto break-inside-avoid">
                     <div class="w-full"
                          style={`aspect-ratio: 16 / 9`}>

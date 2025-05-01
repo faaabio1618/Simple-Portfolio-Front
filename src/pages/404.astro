@@ -1,0 +1,20 @@
+---
+import Layout from "../layouts/Layout.astro";
+import {retrieveMain} from "../lib/strapi";
+const {site, photographer} = await retrieveMain();
+---
+<Layout site={site} photographer={photographer} title={'Gallery not found'} subtitle={}>
+
+    <div class="text-center text-2xl font-bold">
+        <figure class="relative w-full h-auto break-inside-avoid">
+            <div class="w-full"
+                 style={`aspect-ratio: 16 / 9`}>
+                <img
+                        src="/assets/gallery_not_found.jpg"
+                        alt="Gallery not found"
+                        class="w-full h-full object-cover"
+                />
+            </div>
+        </figure>
+    </div>
+</Layout>
